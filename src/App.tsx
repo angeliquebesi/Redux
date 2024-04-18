@@ -5,6 +5,8 @@ import { RootState, useAppDispatch } from './store/store'
 import DeliveryComponent from './components/delivery'
 import { Button, Flex, Layout } from 'antd'
 import DetailComponent from './components/detail';
+import Home from './components/home';
+import TodoList from './components/todolist';
 
 const { Header, Content } = Layout;
 
@@ -25,7 +27,7 @@ function App() {
       <Header style={headerStyle}>
         <Flex gap='middle' justify='space-between' align='center'>
           <Button onClick={() => dispatch(login({ id: 1, name: 'John Doe', logged: true }))}>Login</Button>
-          <Button onClick={() => dispatch(logout())}>Logout</Button>
+          <Button onClick={() => { dispatch(logout()) }}>Logout</Button>
           {user.logged ? <p>User name: {user.name}</p> : <></>}
         </Flex>
       </Header>
@@ -33,7 +35,9 @@ function App() {
         <Router>
           <Routes>
             <Route path="/detail/:id" element={<DetailComponent />} />
-            <Route path="/" element={user.logged ? <DeliveryComponent /> : <></>} />
+            <Route path="/deliveries" element={user.logged ? <DeliveryComponent /> : <></>} />
+            <Route path="/todo" element={<TodoList />} />
+            <Route path="/" element={<Home />} />
           </Routes>
         </Router>
       </Content>
