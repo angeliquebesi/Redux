@@ -38,10 +38,13 @@ export const todoApi = createApi({
       }),
       invalidatesTags: (result) => result ? [{ type: "Todo", id: result.id }, { type: "Todo", id: "LIST" }] : []
     }),
-    getAllTodos: builder.query({
-      query: () => "/posts",
-      providesTags: [{ type: "Todo", id: "LIST" }]
-
+    getAllTodos: builder.query<Todo[], void>({
+      query: () => '/posts',
+      providesTags: (result: Todo[] | undefined) =>
+        result ? [
+          ...result.map(({ id }) => ({ type: 'Todo', id } as const)),
+          { type: 'Todo', id: 'LIST' } as const,
+        ] : [{ type: 'Todo', id: 'LIST' } as const],
     }),
     getTodoById: builder.query({
       query: (id) => `/posts/${id}`,
@@ -55,9 +58,6 @@ export const todoApi = createApi({
           title: todo.title,
           body: todo.body,
         }),
-        headers: {
-          "Content-type": "application/json; charset=UTF-8",
-        },
       }),
       async onQueryStarted({ id, data }, { dispatch, queryFulfilled }) {
         const getTodoByIdPatch = dispatch(
@@ -89,8 +89,8 @@ export const todoApi = createApi({
         url: `/posts/${id}`,
         method: "DELETE",
       }),
+      invalidatesTags: (result) => [{ type: "Todo", id: result.id }, { type: "Todo", id: "LIST" }]
     })
-
   })
 })
 
