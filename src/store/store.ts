@@ -3,6 +3,7 @@ import userReducer from './user'
 import deliveriesReducer from './delivery'
 import { useDispatch } from 'react-redux'
 import { todoApi } from '../API/todoApi'
+import { rtkQueryErrorLogger } from '../API/rtkQueryErrorLogger'
 
 
 export const store = configureStore({
@@ -12,7 +13,7 @@ export const store = configureStore({
     [todoApi.reducerPath]: todoApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(todoApi.middleware),
+    getDefaultMiddleware().concat(todoApi.middleware, rtkQueryErrorLogger),
 })
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
